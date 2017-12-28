@@ -1,5 +1,7 @@
 from django.conf import settings
 
-GIT_USER = getattr(settings, "GIT_USER", "git")
 GIT_ROOT = getattr(settings, "GIT_ROOT", "/var/lib/giteway/")
-
+CMD_GIT = getattr(settings, "CMD_GIT", "git")
+CMD_CHOWN = getattr(settings, "CMD_CHOWN", "chown")
+CMD_CHMOD = getattr(settings, "CMD_CHMOD", "chmod")
+CMD_MV = getattr(settings, "CMD_MV", "mv")

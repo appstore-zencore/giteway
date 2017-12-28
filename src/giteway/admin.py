@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Repo
-from .settings import GIT_USER
+
 
 class RepoAdmin(admin.ModelAdmin):
     list_display = ["name", "description", "address"]

@@ -1,8 +1,13 @@
+import threading
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
 from django_global_request.middleware import get_request
 from .settings import GIT_ROOT
+from .utils import init_repo
+from .utils import rename_repo
 
 
 class Repo(models.Model):
@@ -23,3 +28,28 @@ class Repo(models.Model):
         host = request.META.get("HTTP_HOST", "127.0.0.1")
         return "{}@{}:{}/{}/".format(self.user.username, host, root, self.name).replace("//", "/")
     address.short_description = _("Address")
+
+
+repo_on_change_storage = threading.local()
+
+
+def repo_on_created(**kwargs):
+    created = kwargs.get("created")
+    repo = kwargs.get("instance")
+    if created:
+        print("init repo...")
+        init_repo(repo.name, repo.user.username, GIT_ROOT)
+    else:
+        if repo.name != repo_on_change_storage.old_repo.name:
+            print("rename repo...")
+            rename_repo(repo_on_change_storage.old_repo.name, repo.name, GIT_ROOT)
+
+
+def repo_on_change(**kwargs):
+    new_repo = kwargs.get("instance", None)
+    if new_repo.pk:
+        repo_on_change_storage.old_repo = Repo.objects.get(pk=new_repo.pk)
+
+
+post_save.connect(repo_on_created, sender=Repo)
+pre_save.connect(repo_on_change, sender=Repo)
