@@ -4,10 +4,12 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_save
+from django.db.models.signals import post_delete
 from django_global_request.middleware import get_request
 from .settings import GIT_ROOT
 from .utils import init_repo
 from .utils import rename_repo
+from .utils import delete_repo
 
 
 class Repo(models.Model):
@@ -50,6 +52,10 @@ def repo_on_change(**kwargs):
     if new_repo.pk:
         repo_on_change_storage.old_repo = Repo.objects.get(pk=new_repo.pk)
 
+def repo_on_delete(**kwargs):
+    repo = kwargs.get("instance")
+    delete_repo(repo.name, GIT_ROOT)
 
 post_save.connect(repo_on_created, sender=Repo)
 pre_save.connect(repo_on_change, sender=Repo)
+post_delete.connect(repo_on_delete, sender=Repo)

@@ -1,9 +1,10 @@
 import os
 import subprocess
-from .utils import CMD_GIT
-from .utils import CMD_CHMOD
-from .utils import CMD_CHOWN
-from .utils import CMD_MV
+from .settings import CMD_GIT
+from .settings import CMD_CHMOD
+from .settings import CMD_CHOWN
+from .settings import CMD_MV
+from .settings import CMD_RM
 
 
 def init_repo(name, username, root):
@@ -16,4 +17,9 @@ def init_repo(name, username, root):
 
 def rename_repo(old_name, new_name, root):
     subprocess.run([CMD_MV,old_name, new_name], cwd=root)
+    return True
+
+
+def delete_repo(name, root):
+    subprocess.run([CMD_RM, "-rf", name], cwd=root)
     return True
