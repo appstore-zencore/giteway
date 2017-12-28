@@ -9,6 +9,7 @@ with open(os.path.join(here, 'README.rst'), "r", encoding="utf-8") as fobj:
 
 requires = [
     "django",
+    "django_middleware_global_request",
 ]
 
 setup(
