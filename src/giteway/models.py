@@ -10,6 +10,7 @@ from .settings import GIT_ROOT
 from .utils import init_repo
 from .utils import rename_repo
 from .utils import delete_repo
+from .utils import get_git_server
 
 
 class Repo(models.Model):
@@ -27,8 +28,8 @@ class Repo(models.Model):
     def address(self):
         request = get_request()
         root = GIT_ROOT
-        host = request.META.get("HTTP_HOST", "127.0.0.1")
-        return "{}@{}:{}/{}/".format(self.user.username, host, root, self.name).replace("//", "/")
+        server = get_git_server(request)
+        return "{}@{}:{}/{}/".format(self.user.username, server, root, self.name).replace("//", "/")
     address.short_description = _("Address")
 
 

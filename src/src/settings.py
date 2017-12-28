@@ -25,7 +25,7 @@ SECRET_KEY = 'g+x(jeu#+#0=%0mpeh4(67kjg82up6i-2k$!1xex5pekrf4mq2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

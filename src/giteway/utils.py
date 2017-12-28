@@ -5,6 +5,7 @@ from .settings import CMD_CHMOD
 from .settings import CMD_CHOWN
 from .settings import CMD_MV
 from .settings import CMD_RM
+from .settings import GIT_SERVER
 
 
 def init_repo(name, username, root):
@@ -23,3 +24,12 @@ def rename_repo(old_name, new_name, root):
 def delete_repo(name, root):
     subprocess.run([CMD_RM, "-rf", name], cwd=root)
     return True
+
+
+def get_git_server(request):
+    server = GIT_SERVER
+    if not server:
+        server = request.META.get("HTTP_HOST", "127.0.0.1").split(":")[0]
+    if not server:
+        server = "127.0.0.1"
+    return server
